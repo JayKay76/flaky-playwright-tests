@@ -11,7 +11,7 @@ def run_test() -> dict:
 
         try:
             page.goto("https://www.elverys.ie/")  # Replace with your URL
-            time.sleep(random.uniform(0.5, 10))  # Simulate variable network latency
+            time.sleep(random.uniform(0.5, 1))  # Simulate variable network latency
             
             # Simulating a flaky test condition (10% chance of failure)
             if random.random() < 0.10:
