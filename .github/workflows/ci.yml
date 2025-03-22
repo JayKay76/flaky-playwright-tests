@@ -1,0 +1,48 @@
+name: Flaky Playwright Test Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  flaky-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install Dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install playwright pandas matplotlib
+          playwright install
+
+      - name: Run Playwright Flaky Test 100 Times
+        run: |
+          source venv/bin/activate
+          python flaky_test.py
+
+      - name: Generate Report
+        run: |
+          source venv/bin/activate
+          python generate_report.py
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: flaky-test-results
+          path: |
+            test_results.json
+            flaky_test_report.png
